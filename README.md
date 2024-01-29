@@ -34,3 +34,5 @@ and will launch the opeartion with the test file.
 
 ## Libs used
 GLIB
+- https://developer-old.gnome.org/glib/unstable/
+- https://docs.gtk.org/glib/index.html
