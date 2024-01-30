@@ -38,6 +38,7 @@ GLIB
 ## References
 C
 - https://en.cppreference.com/w/c
+
 GLIB
 - https://developer-old.gnome.org/glib/unstable/
 - https://docs.gtk.org/glib/index.html
