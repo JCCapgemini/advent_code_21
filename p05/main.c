@@ -103,8 +103,8 @@ int main(int argc, char** argv) {
     gpointer key, value;
     g_hash_table_iter_init (&iter, ht);
     while (g_hash_table_iter_next (&iter, &key, &value)) {
-        struct Position* p = key;
         int val = *((int*)value);
+        //struct Position* p = key;
         //printf("Pos: x %d y %d Hits: %d\n", p->posx, p->posy, val);
         if (val>1) {
             totals++;

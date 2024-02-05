@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
     fgets(str, STR_MAX, stdin);
     while (!feof(stdin)) {
         int start = 0;
-        char v;
+        int v;
         for(int i=0; str[i] != '\0'; i++) {
             if (str[i] == ',') {
                 str[i] = '\0';

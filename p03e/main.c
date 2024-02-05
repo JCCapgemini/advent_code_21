@@ -1,11 +1,12 @@
 #include<limits.h>
 #include<stdio.h>
+#include<string.h>
 #include<stdlib.h>
 #include<glib.h>
 
 #define STR_MAX 100
 
-gpointer my_ptr_array_copy (gconstpointer src, gpointer dest)
+gpointer my_ptr_array_copy (gpointer src, gpointer dest)
 {
     dest = src;
     return dest;
@@ -78,7 +79,7 @@ void least_most_bits(int* least, int* most, int* pwidth, GPtrArray const * const
 }
 
 int most_common_value(GPtrArray const * const arr) {
-    GPtrArray* most_array = g_ptr_array_copy(arr, my_ptr_array_copy, NULL);
+    GPtrArray* most_array = g_ptr_array_copy((GPtrArray*)arr, (void*)my_ptr_array_copy, NULL);
     int most, least, width;
     least_most_bits(&most, &least, &width, most_array);
     int cur_idx = width;
@@ -123,7 +124,7 @@ int most_common_value(GPtrArray const * const arr) {
 
 int least_common_value(GPtrArray const * const arr) {
     print_array(arr);
-    GPtrArray* most_array = g_ptr_array_copy(arr, my_ptr_array_copy, NULL);
+    GPtrArray* most_array = g_ptr_array_copy((GPtrArray*)arr, (void*)my_ptr_array_copy, NULL);
     int most, least, width;
     least_most_bits(&most, &least, &width, most_array);
     int cur_idx = width;
