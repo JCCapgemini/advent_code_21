@@ -1,5 +1,6 @@
 GLIB_FLAGS=`pkg-config --libs glib-2.0`
 CFLAGS=-Wall -std=c11 `pkg-config --cflags glib-2.0` -O2
+DEB_CFLAGS=-ggdb3
 OBJ=main.o
 OBJD=maind.o
 
@@ -10,10 +11,10 @@ main.o: main.c
 	$(CC) $(CFLAGS) $(GLIB_FLAGS) -c main.c -o main.o
 
 programd: $(OBJD)
-	$(CC) $(OBJD) -g $(CFLAGS) $(GLIB_FLAGS) -o programd
+	$(CC) $(OBJD) $(DEB_CFLAGS) $(CFLAGS) $(GLIB_FLAGS) -o programd
 
 maind.o: main.c
-	$(CC) -g $(CFLAGS) $(GLIB_FLAGS) -c main.c -o maind.o
+	$(CC) $(DEB_CFLAGS) $(CFLAGS) $(GLIB_FLAGS) -c main.c -o maind.o
 
 test: program
 	./program < test.txt | tail -1 | diff --strip-trailing-cr -w testr.txt -
