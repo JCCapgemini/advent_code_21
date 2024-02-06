@@ -44,29 +44,33 @@ char closedBraketPair(char c) {
 }
 
 char recursion(char* str, int* i) {
-    GArray* arr_stack = g_array_new(FALSE, FALSE, sizeof(char));
+#define GArType int
+    GArray* arr_pos = g_array_new(FALSE, FALSE, sizeof(GArType));
     char cur_chr = '\0';
     for (*i=0; str[*i]!='\0'; (*i)++) {
         cur_chr = str[*i];
-        printf("::%c::\n", cur_chr);
+        //printf("::%c::\n", cur_chr);
         if (isOpenBraket(cur_chr)) {
             // Is open
-            g_array_append_val(arr_stack, cur_chr);
+            g_array_append_val(arr_pos, *i);
         } else {
             // Is close
-            if (arr_stack->len > 0) {
+            if (arr_pos->len > 0) {
                 // Stack not empty
-                const char match_char = g_array_index(arr_stack, char, arr_stack->len-1);
-                g_array_remove_index(arr_stack, arr_stack->len-1);
-                printf("Comp stack: %c actual: %c\n", match_char, cur_chr);
+                const GArType match_pos = g_array_index(arr_pos, GArType, arr_pos->len-1);
+                const char match_char = str[match_pos];
+                g_array_remove_index(arr_pos, arr_pos->len-1);
+                //printf("Comp stack: %c actual: %c\n", match_char, cur_chr);
                 if (closedBraketPair(match_char) != cur_chr) {
                     // Close bracket not match
-                    printf("eary exit!\n");
                     break;
                 }
+                // Close bracket match
+                // Remove the character for debug
+                str[match_pos] = ' ';
+                str[*i] = ' ';
             } else {
                 // Stack empty
-                printf("eary exit!\n");
                 break;
             }
         }
@@ -74,40 +78,45 @@ char recursion(char* str, int* i) {
 
     if((strlen(str)) == *i) {
         cur_chr = '\0';
-    } else {
-        printf(" ret: %c\nStack: ", cur_chr);
-        for(int j=0; j<arr_stack->len; j++) {
-            printf("%c ", g_array_index(arr_stack, char, j));
-        }
-    }
+    } 
+    //else {
+    //    printf(" ret: %c\nStack: ", cur_chr);
+    //    for(int j=0; j<arr_pos->len; j++) {
+    //        printf("%c ", str[g_array_index(arr_pos, GArType, j)]);
+    //    }
+    //}
 
-    printf("\n");
+    printf("%s\n", str);
 
-    g_array_free(arr_stack, TRUE);
+    g_array_free(arr_pos, TRUE);
     return cur_chr;
+#undef GArType
 }
 
 #define STR_MAX 1000
 int main(int argc, char** argv) {
     char str[STR_MAX] = {0};
     int hits[CLOSE_BRAKETS_SIZE] = {0};
+    int lc = 0;
 
-    scanf("%100s", str);
+    scanf("%1000s", str);
     while (!feof(stdin)) {
-        printf("\n\nLine:\n%s", str);
+        printf("\n\nLine:\n%s\n", str);
         if(strlen(str) == 0) continue;
         int pos = 0;
         char res = '\0';
-        printf("\nStart pos:%d\n", pos);
         res = recursion(str, &pos);
         if (res!='\0') {
             printf("The braket was: %c\n", res);
             hits[(int)closeBrakets(res)]++;
+        } else {
+            printf("No problems %d\n", lc);
         }
-        printf("%lld %d %c\n", strlen(str), pos, res);
+        printf("%lld %d\n", strlen(str), pos);
         assert(pos <= (strlen(str) +1));
         str[0] = '\0';
-        scanf("%100s", str);
+        lc++;
+        scanf("%1000s", str);
     }
     int total = hits[(int)CloseRoundBraket] * 3 +
         hits[(int)CloseSquareBraket] * 57 + 
