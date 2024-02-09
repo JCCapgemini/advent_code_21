@@ -1,10 +1,10 @@
-#include<limits.h>
-#include<stdio.h>
-#include<stdint.h>
-#include<string.h>
+#include<assert.h>
 #include<ctype.h>
 #include<glib.h>
-#include<assert.h>
+#include<limits.h>
+#include<stdint.h>
+#include<stdio.h>
+#include<string.h>
 
 #define STR_MAX 100
 #define ARR_TYPE uint8_t 
