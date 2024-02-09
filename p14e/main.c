@@ -13,41 +13,41 @@ void g_ht_print_str_str(gpointer key, gpointer value, gpointer user_data) {
     printf("Patt: %s Res: %s\n", (char*)key, (char*) value); 
 }
 
-void g_ht_print_str___int128(gpointer key, gpointer value, gpointer user_data) {
-    printf("Patt: %s PattLen: %lld Res: %lld \n", (char*)key, strlen((char*)key), *(__int128*) value); 
+void g_ht_print_str_uint64_t(gpointer key, gpointer value, gpointer user_data) {
+    printf("Patt: %s PattLen: %lld Res: %lld \n", (char*)key, strlen((char*)key), *(uint64_t*) value); 
 }
 
-void g_ht_reset_str___int128(gpointer key, gpointer value, gpointer user_data) {
-    *(__int128*)value = 0;
+void g_ht_reset_str_uint64_t(gpointer key, gpointer value, gpointer user_data) {
+    *(uint64_t*)value = 0;
 }
 
-void g_ht_copy_str___int128(gpointer org_key, gpointer org_value, gpointer ht_dst) {
-    g_hash_table_insert(ht_dst, (char*)org_key, (__int128*)org_value);
+void g_ht_copy_str_uint64_t(gpointer org_key, gpointer org_value, gpointer ht_dst) {
+    g_hash_table_insert(ht_dst, (char*)org_key, (uint64_t*)org_value);
 }
 
-void g_ht_copy_add_str___int128(gpointer org_key, gpointer org_value, gpointer ht_dst) {
-    __int128* ov = g_hash_table_lookup(ht_dst, org_key);
+void g_ht_copy_add_str_uint64_t(gpointer org_key, gpointer org_value, gpointer ht_dst) {
+    uint64_t* ov = g_hash_table_lookup(ht_dst, org_key);
     if(ov == NULL) {
-        ov = malloc(sizeof(__int128));
+        ov = malloc(sizeof(uint64_t));
         g_hash_table_insert(ht_dst, org_key, ov);
     }
-    *ov = *(__int128*) org_value;
+    *ov = *(uint64_t*) org_value;
 }
 
-void g_ht_copy_char_str___int128(gpointer org_key, gpointer org_value, gpointer ht_dst) {
+void g_ht_copy_char_str_uint64_t(gpointer org_key, gpointer org_value, gpointer ht_dst) {
     if(strlen((char*)org_key) == 1) {
-        __int128* ov = g_hash_table_lookup(ht_dst, org_key);
-        *ov = *(__int128*)org_value;
+        uint64_t* ov = g_hash_table_lookup(ht_dst, org_key);
+        *ov = *(uint64_t*)org_value;
     }
 }
 
-void hash_table_inc(GHashTable* dest, char* key, __int128 inc) {
-    __int128* oc = g_hash_table_lookup(dest, key);
+void hash_table_inc(GHashTable* dest, char* key, uint64_t inc) {
+    uint64_t* oc = g_hash_table_lookup(dest, key);
     if (oc == NULL) {
         // Add the new pair
         char* nk = g_strdup(key);
         // To buffer ht
-        oc = malloc(sizeof(__int128));
+        oc = malloc(sizeof(uint64_t));
         *oc = 0;
         g_hash_table_insert(dest, nk, oc);
     }
@@ -60,9 +60,9 @@ void iterate(GHashTable* input, GHashTable* tmp_buf, GHashTable* ht_transformati
     printf("Iterate start\n");
     // Initialize memories
     char buf[3] = {'\0'};
-    g_hash_table_foreach(tmp_buf, g_ht_reset_str___int128, NULL);
+    g_hash_table_foreach(tmp_buf, g_ht_reset_str_uint64_t, NULL);
     // Setup initial status
-    g_hash_table_foreach(input, g_ht_copy_char_str___int128, tmp_buf);
+    g_hash_table_foreach(input, g_ht_copy_char_str_uint64_t, tmp_buf);
 
     // Do all transformations
     char* key;
@@ -70,7 +70,7 @@ void iterate(GHashTable* input, GHashTable* tmp_buf, GHashTable* ht_transformati
     GHashTableIter iter;
     g_hash_table_iter_init(&iter, ht_transformations);
     while(g_hash_table_iter_next(&iter, (void*)&key, (void*)&value)) {
-        __int128* count = (__int128*) g_hash_table_lookup(input, key);
+        uint64_t* count = (uint64_t*) g_hash_table_lookup(input, key);
         if (count != NULL) {
             printf("K: %s V: %lld \n", key, *count);
             // Add all the new letters
@@ -96,14 +96,14 @@ void iterate(GHashTable* input, GHashTable* tmp_buf, GHashTable* ht_transformati
     }
 
     // Finalize
-    g_hash_table_foreach(tmp_buf, g_ht_copy_add_str___int128, input);
+    g_hash_table_foreach(tmp_buf, g_ht_copy_add_str_uint64_t, input);
     printf("Iterate end\n");
 }
 
-int compare___int128( const void* a , const void* b )
+int compare_uint64_t( const void* a , const void* b )
 {
-    const __int128 ai = *( const __int128* )a;
-    const __int128 bi = *( const __int128* )b;
+    const uint64_t ai = *( const uint64_t* )a;
+    const uint64_t bi = *( const uint64_t* )b;
 
     if( ai < bi )
     {
@@ -127,7 +127,7 @@ GHashTable* fromStringWindows(char* str) {
     // Setup initial status
     buf[1] = str[0];
     buf_c[0] = str[0];
-    __int128* v = malloc(sizeof(__int128));
+    uint64_t* v = malloc(sizeof(uint64_t));
     *v = 1;
     g_hash_table_insert(ht, g_strdup(buf_c), v);
     // Loop
@@ -137,7 +137,7 @@ GHashTable* fromStringWindows(char* str) {
         buf_c[0] = str[i];
         v = g_hash_table_lookup(ht, buf_c);
         if (v==NULL) {
-            v = malloc(sizeof(__int128));
+            v = malloc(sizeof(uint64_t));
             *v = 0;
             g_hash_table_insert(ht, g_strdup(buf_c), v);
         } 
@@ -147,9 +147,9 @@ GHashTable* fromStringWindows(char* str) {
         buf[0] = buf[1];
         buf[1] = str[i];
         char* key = g_strdup(buf);
-        __int128* vw = g_hash_table_lookup(ht, key);
+        uint64_t* vw = g_hash_table_lookup(ht, key);
         if (vw==NULL) {
-            vw = malloc(sizeof(__int128));
+            vw = malloc(sizeof(uint64_t));
             *vw = 0;
             g_hash_table_insert(ht, key, vw);
         } 
@@ -162,12 +162,12 @@ GHashTable* fromStringWindows(char* str) {
 }
 
 
-// char* -> __int128
-int calculate_total(GHashTable* ht) {
-    __int128 max = 0;
-    __int128 min = -1;
+// char* -> uint64_t
+uint64_t calculate_total(GHashTable* ht) {
+    uint64_t max = 0;
+    uint64_t min = -1;
     char* key;
-    __int128* value;
+    uint64_t* value;
     GHashTableIter iter;
     g_hash_table_iter_init(&iter, ht);
     while(g_hash_table_iter_next(&iter, (void*)&key, (void*)&value)) {
@@ -194,7 +194,7 @@ int main(int argc, char** argv) {
     GHashTable* ht_windows = fromStringWindows(istr);
     GHashTable* ht_windows_buf = fromStringWindows(istr);
     printf("Input:\n");
-    g_hash_table_foreach(ht_windows, g_ht_print_str___int128, NULL);
+    g_hash_table_foreach(ht_windows, g_ht_print_str_uint64_t, NULL);
     printf("Input end\n");
 
     // Empty line, not use
@@ -228,18 +228,18 @@ int main(int argc, char** argv) {
     printf("Transformations end\n");
 
     printf("IS: %s\n", str);
-    for(int i=0; i<10; i++) {
+    for(int i=0; i<40; i++) {
         iterate(ht_windows, ht_windows_buf, ht_transformations);
         printf("I: %d\n", i);
 
         printf("Work:\n");
-        g_hash_table_foreach(ht_windows, g_ht_print_str___int128, NULL);
+        g_hash_table_foreach(ht_windows, g_ht_print_str_uint64_t, NULL);
         printf("Work end\n");
     }
 
-    int total = calculate_total(ht_windows);
+    uint64_t total = calculate_total(ht_windows);
     printf("Total\n");
-    printf("%d\n", total);
+    printf("%lld\n", total);
 
     return 0;
 }
