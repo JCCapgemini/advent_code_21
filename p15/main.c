@@ -12,25 +12,6 @@
 #define ARR_TYPE uint64_t
 #define ARR_TYPE_CHR char 
 
-char compare_uint64_t( void* a , void* b )
-{
-    const uint64_t ai = *( const uint64_t* )a;
-    const uint64_t bi = *( const uint64_t* )b;
-
-    if( ai < bi )
-    {
-        return -1;
-    }
-    else if( ai > bi )
-    {
-        return 1;
-    }
-    else
-    {
-        return 0;
-    }
-}
-
 void print_grid(GPtrArray* grid) {
     // Print grid!
     printf("Grid:\n");
@@ -52,6 +33,25 @@ struct DijstraPosition {
     struct Position p;
     uint64_t cost;
 };
+
+char compare_struct_dijstra_position( void* a , void* b )
+{
+    const struct DijstraPosition* ai = ( const struct DijstraPosition* )a;
+    const struct DijstraPosition* bi = ( const struct DijstraPosition* )b;
+
+    if( ai->cost < bi->cost )
+    {
+        return -1;
+    }
+    else if( ai->cost > bi->cost )
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
 
 int dijstra_position_equals(const void* lr, const void* rr) {
     const struct Position* l = &((const struct DijstraPosition*) lr)->p;
@@ -84,7 +84,7 @@ ARR_TYPE_CHR grid_position_index(GPtrArray* grid, struct Position* p) {
 }
 
 uint64_t dijstra(GPtrArray* grid) {
-    struct pq* mpq = pq_new(compare_uint64_t);
+    struct pq* mpq = pq_new(compare_struct_dijstra_position);
     GHashTable* seen = g_hash_table_new(dijstra_position_hash, dijstra_position_equals);
 
     const uint64_t row_len = grid->len -1;
