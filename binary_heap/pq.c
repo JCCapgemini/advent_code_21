@@ -28,7 +28,7 @@ void pq_push(struct pq* pq, void* new_element) {
     int pidx = -1;
     g_ptr_array_insert(pq->vector_storage, -1, new_element);
     if (pq->vector_storage->len > 1) {
-        printf("Pos %d\n", idx);
+        //printf("Pos %d\n", idx);
         pidx = pq_parent(idx);
         assert(idx >= 0);
         assert(pidx >= 0);
@@ -45,9 +45,7 @@ void pq_push(struct pq* pq, void* new_element) {
             cnode = g_ptr_array_index(parray, idx);
         }
     }
-    printf("PIdx: %d CIdx: %d\n", pidx, idx);
-
-
+    //printf("PIdx: %d CIdx: %d\n", pidx, idx);
 }
 
 int pq_left_child(int pos) {
